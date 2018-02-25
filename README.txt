@@ -1,3 +1,3 @@
-A Pen created at CodePen.io. You can find this one at https://codepen.io/tannguyen1295/pen/mXzdGe.
-
- 
+#RegisterForm
+Simple web application using React for registering activities
+Codepen: https://codepen.io/tannguyen1295/pen/mXzdGe. 
