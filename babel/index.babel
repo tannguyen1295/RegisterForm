@@ -1,0 +1,133 @@
+function Input(props){
+    var style = {
+        width: 165,
+        height: 25
+    }
+    return(
+        <div>
+            <div>{props.title}</div>
+            <input style = {style} name={props.name} value={props.value} onChange = {props.handleChange}/>
+        </div>
+    )
+}
+
+function Select(props){
+    var style = {
+        width: 170,
+        height: 30
+    }
+    var activities = ["Science Lab","Swimming","Cooking","Painting"]
+    var options = activities.map( (item) =>
+            <option value = {item}>{item}</option>
+        )
+    return(
+        <div>
+            <div>{props.title}</div>
+            <select style={style} name={props.name} value={props.value} onChange={props.handleChange}>{options}</select>
+        </div>
+    )
+}
+
+function CheckBox(props){
+    var style = {
+        display: "flex"
+    }
+
+    return(
+        <div style={style}>
+            <input type="checkbox" checked = {props.checked} name={props.name} onChange = {props.handleChange}/>
+            {props.name}) {props.title}
+         </div>
+    )
+}
+
+function PostList(props){
+    var elements = []
+    var res = ""
+    
+    for(let i = 0; i < props.list.length; i++){
+       var member = props.list[i]
+       
+       if (member.a == "on")
+          res += "a"
+       if (member.b == "on")
+          res += "b"
+       if (member.c == "on")
+          res += "c"
+       elements.push(<tr>
+            <td><button id={i} onClick = {() => props.remove(i)}>x</button></td>
+            <td>{member.fn}</td>
+            <td>{member.ln}</td>
+            <td>{member.act}</td>
+            <td>{res}</td>
+        </tr>)
+       res = ""
+    }
+
+    return(
+        <table>
+            <tr>
+                <th>Remove</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Activity</th>
+                <th>Restriction</th>
+            </tr>
+            {elements}
+        </table>
+    )
+}
+
+function Button(props){
+    var style = {
+        width: 170,
+        height: 30,
+    }
+    return(
+        <button style = {style} onClick = {props.addMember}>Submit</button>
+    )
+}
+
+class App extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {fn:"", ln:"", act:"", a:false, b:false, c:false ,members:[]}
+    }
+  
+    handleChange(event){
+        this.setState({[event.target.name] : event.target.value})
+    }
+  
+    remove(index){
+        var membersCopy = this.state.members.slice()
+        membersCopy.splice(index,1);
+
+        this.setState({members:membersCopy})
+    }
+  
+    addMember(){
+        var membersCopy = this.state.members.slice()
+        membersCopy.push({fn:this.state.fn, ln:this.state.ln, act:this.state.act, a:this.state.a, b:this.state.b, c:this.state.c})
+        this.setState({fn:"", ln:"", act:"", a:false, b:false, c:false, members:membersCopy})
+      
+    }
+    render(){
+        return(
+          <div>
+            <Input title="First Name" name="fn" value = {this.state.fn} handleChange = {this.handleChange.bind(this)}/>
+            <Input title="Last Name" name="ln" value = {this.state.ln} handleChange = {this.handleChange.bind(this)}/>
+            <Select title="Select Activity:" name="act" value = {this.state.act} handleChange = {this.handleChange.bind(this)}/>
+            <div>Check all that apply:</div>
+            <CheckBox checked = {this.state.a} handleChange = {this.handleChange.bind(this)} name = "a" title = "Dietary Restrictions" />
+            <CheckBox checked = {this.state.b} handleChange = {this.handleChange.bind(this)} name = "b" title = "Physical Disabilities"/>
+            <CheckBox checked = {this.state.c} handleChange = {this.handleChange.bind(this)} name = "c" title = "Medical Needs"/>
+            <Button addMember = {this.addMember.bind(this)}/>
+            <PostList list={this.state.members} remove = {this.remove.bind(this)}/>
+          </div>
+    )}
+}
+
+ReactDOM.render(
+    <App/>,
+    document.getElementById('root')
+)
